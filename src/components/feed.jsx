@@ -26,13 +26,18 @@ const Feed = () => {
   useEffect(() => {
     getFeeds();
   }, []);
-console.log("Feed", feed);
+  console.log("Feed", feed);
   return (
     <div className="flex flex-wrap justify-center my-10 gap-10">
       {feed?.map((item) => (
         <UserCard
           key={item?.id}
-          user={item}
+          firstName={item?.firstName}
+          lastName={item?.lastName}
+          age={item?.age}
+          gender={item?.gender}
+          about={item?.about}
+          photoUrl={item?.photoUrl}
         />
       ))}
     </div>
