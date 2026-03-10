@@ -1,8 +1,22 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { BASE_URL } from "../utils/constant";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const user = useSelector((store: any) => store?.user);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post(BASE_URL + "/logout");
+      navigate("/login");
+      return response;
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
 
   return (
     <div className="navbar bg-base-300 shadow-sm">
@@ -33,16 +47,19 @@ const Navbar = () => {
               </div>
               <ul className="menu menu-sm dropdown-content bg-base-300 rounded-box z-1 mt-5 w-52 p-2 shadow">
                 <li>
-                  <a className="justify-between">
+                  <Link
+                    to={"/profile"}
+                    className="justify-between"
+                  >
                     Profile
                     <span className="badge">New</span>
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a>Settings</a>
+                  <Link to={"/feed"}>Feed</Link>
                 </li>
-                <li>
-                  <a>Logout</a>
+                <li onClick={handleLogout}>
+                  <span>Logout</span>
                 </li>
               </ul>
             </div>
