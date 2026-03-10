@@ -1,9 +1,79 @@
-import React from 'react'
+import axios from "axios";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/user-slice";
+import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../utils/constant";
 
 const Login = () => {
-  return (
-    <div>Login</div>
-  )
-}
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-export default Login
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        BASE_URL + "/login",
+        {
+          emailId: email,
+          password,
+        },
+        { withCredentials: true },
+      );
+      dispatch(addUser(response?.data?.data));
+      navigate("/feed");
+      return response;
+    } catch (error) {
+      console.group("Error", error);
+    }
+  };
+
+  return (
+    <div className="flex justify-center my-10">
+      <div className="card bg-base-300 w-96 shadow-sm">
+        <div className="card-body">
+          <h2 className="card-title text-2xl text-center justify-center">
+            Login
+          </h2>
+          <form onSubmit={submitHandler}>
+            <div>
+              <fieldset className="fieldset p-2">
+                <legend className="fieldset-legend">Email ID</legend>
+                <input
+                  type="text"
+                  className="input"
+                  value={email}
+                  onChange={(e) =>
+                    setEmail(e.target.value.trim().toLowerCase())
+                  }
+                />
+              </fieldset>
+
+              <fieldset className="fieldset p-2">
+                <legend className="fieldset-legend">Password</legend>
+                <input
+                  type="text"
+                  className="input"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value.trim())}
+                />
+              </fieldset>
+            </div>
+            <div className="card-actions justify-center">
+              <button
+                className="btn btn-primary"
+                type="submit"
+              >
+                Login
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
