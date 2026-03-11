@@ -1,6 +1,14 @@
 import React from "react";
 
-const UserCard = ({ firstName, lastName, age, gender, about, photoUrl }) => {
+const UserCard = ({
+  firstName,
+  lastName,
+  age,
+  gender,
+  about,
+  photoUrl,
+  isActionButton,
+}) => {
   const fullName =
     [firstName, lastName].filter(Boolean).join(" ") || "Anonymous";
 
@@ -33,20 +41,22 @@ const UserCard = ({ firstName, lastName, age, gender, about, photoUrl }) => {
           </p>
         )}
 
-        <div className="mt-5 flex gap-2">
-          <button
-            type="button"
-            className="btn btn-outline btn-error btn-sm flex-1 rounded-xl font-medium"
-          >
-            Ignore
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary btn-sm flex-1 rounded-xl font-medium shadow-lg shadow-primary/25"
-          >
-            Send Request
-          </button>
-        </div>
+        {isActionButton && (
+          <div className="mt-5 flex gap-2">
+            <button
+              type="button"
+              className="btn btn-outline btn-error btn-sm flex-1 rounded-xl font-medium"
+            >
+              Ignore
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary btn-sm flex-1 rounded-xl font-medium shadow-lg shadow-primary/25"
+            >
+              Send Request
+            </button>
+          </div>
+        )}
       </div>
     </article>
   );

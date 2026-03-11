@@ -45,7 +45,7 @@ const EditProfile = ({ user }) => {
       );
       dispatch(addUser(response?.data?.data));
       showToast("Profile updated successfully!");
-      setTimeout(() => navigate("/feed"), 1500);
+      setTimeout(() => navigate("/"), 1500);
       return response;
     } catch (err) {
       const message =
@@ -147,6 +147,7 @@ const EditProfile = ({ user }) => {
         gender={gender}
         about={about}
         photoUrl={photoUrl}
+        isActionButton={false}
       />
 
       {/* daisyUI toast */}

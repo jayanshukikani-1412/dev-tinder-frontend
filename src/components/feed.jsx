@@ -15,7 +15,6 @@ const Feed = () => {
       const response = await axios.get(BASE_URL + "/user/feed", {
         withCredentials: true,
       });
-      console.log("Response", response?.data?.data);
       dispatch(addFeed(response?.data?.data));
       return response;
     } catch (error) {
@@ -26,20 +25,32 @@ const Feed = () => {
   useEffect(() => {
     getFeeds();
   }, []);
-  console.log("Feed", feed);
+
   return (
-    <div className="flex flex-wrap justify-center my-10 gap-10">
-      {feed?.map((item) => (
-        <UserCard
-          key={item?.id}
-          firstName={item?.firstName}
-          lastName={item?.lastName}
-          age={item?.age}
-          gender={item?.gender}
-          about={item?.about}
-          photoUrl={item?.photoUrl}
-        />
-      ))}
+    <div>
+      <h2 className="text-2xl font-bold text-center my-10">Feed</h2>
+      {feed?.length > 0 ? (
+        <div className="flex flex-wrap justify-center my-10 gap-10">
+          {feed?.map((item) => (
+            <UserCard
+              key={item?.id}
+              firstName={item?.firstName}
+              lastName={item?.lastName}
+              age={item?.age}
+              gender={item?.gender}
+              about={item?.about}
+              photoUrl={item?.photoUrl}
+              isActionButton={true}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center my-10">
+          <h2 className="text-2xl font-bold text-center my-10">
+            No feed found
+          </h2>
+        </div>
+      )}
     </div>
   );
 };
