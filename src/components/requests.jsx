@@ -1,12 +1,15 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../utils/constant";
-import { addRequests } from "../utils/request-slice";
+import { addRequests, removeRequests } from "../utils/request-slice";
+import { useNavigate } from "react-router-dom";
 
 const Requests = () => {
   const requests = useSelector((store) => store?.requests);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const getRequests = async () => {
     if (requests?.length > 0) return;
@@ -17,6 +20,9 @@ const Requests = () => {
       dispatch(addRequests(response?.data?.data));
       return response;
     } catch (error) {
+      if (error.response?.status === 401) {
+        navigate("/login");
+      }
       console.log("Error", error);
     }
   };
@@ -24,6 +30,26 @@ const Requests = () => {
   useEffect(() => {
     getRequests();
   }, []);
+
+  const reviewRequest = async (requestId, status) => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        BASE_URL + "/request/review/" + status + "/" + requestId,
+        {},
+        { withCredentials: true },
+      );
+      dispatch(removeRequests(requestId));
+      return response;
+    } catch (error) {
+      if (error.response?.status === 401) {
+        navigate("/login");
+      }
+      console.log("Error", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div>
@@ -63,14 +89,18 @@ const Requests = () => {
                   <button
                     type="button"
                     className="btn btn-outline btn-error btn-sm flex-1 rounded-xl font-medium"
+                    onClick={() => reviewRequest(request?._id, "rejected")}
+                    disabled={loading}
                   >
-                    Reject
+                    {loading ? "Loading..." : "Reject"}
                   </button>
                   <button
                     type="button"
                     className="btn btn-primary btn-sm flex-1 rounded-xl font-medium shadow-lg shadow-primary/25"
+                    onClick={() => reviewRequest(request?._id, "accepted")}
+                    disabled={loading}
                   >
-                    Accept
+                    {loading ? "Loading..." : "Accept"}
                   </button>
                 </div>
               </div>

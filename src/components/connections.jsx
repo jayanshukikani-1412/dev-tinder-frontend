@@ -3,10 +3,12 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../utils/constant";
 import { addConnections } from "../utils/connection-slice";
+import { useNavigate } from "react-router-dom";
 
 const Connections = () => {
   const connections = useSelector((store) => store?.connections);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const getConnections = async () => {
     if (connections?.length > 0) return;
@@ -17,6 +19,9 @@ const Connections = () => {
       dispatch(addConnections(response?.data?.data));
       return response;
     } catch (error) {
+      if (error.response?.status === 401) {
+        navigate("/login");
+      }
       console.log("Error", error);
     }
   };

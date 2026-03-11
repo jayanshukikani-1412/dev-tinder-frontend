@@ -48,6 +48,9 @@ const EditProfile = ({ user }) => {
       setTimeout(() => navigate("/"), 1500);
       return response;
     } catch (err) {
+      if (err.response?.status === 401) {
+        navigate("/login");
+      } 
       const message =
         err.response?.data?.message ||
         err.response?.data ||
