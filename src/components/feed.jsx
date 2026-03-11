@@ -38,7 +38,8 @@ const Feed = () => {
         <div className="flex flex-wrap justify-center my-10 gap-10">
           {feed?.map((item) => (
             <UserCard
-              key={item?.id}
+              key={item?._id}
+              id={item?._id}
               firstName={item?.firstName}
               lastName={item?.lastName}
               age={item?.age}

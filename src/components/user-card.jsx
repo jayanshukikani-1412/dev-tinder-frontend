@@ -1,6 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
+import { BASE_URL } from "../utils/constant";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { removeItemFromFeed } from "../utils/feed-slice";
 
 const UserCard = ({
+  id,
   firstName,
   lastName,
   age,
@@ -11,6 +17,29 @@ const UserCard = ({
 }) => {
   const fullName =
     [firstName, lastName].filter(Boolean).join(" ") || "Anonymous";
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleSendRequest = async (userId, status) => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        BASE_URL + "/request/send/" + status + "/" + userId,
+        {},
+        { withCredentials: true },
+      );
+      dispatch(removeItemFromFeed(id));
+      return response;
+    } catch (error) {
+      if (error.response?.status === 401) {
+        navigate("/login");
+      }
+      console.log("Error", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <article className="group relative w-[340px] overflow-hidden rounded-2xl bg-base-100 shadow-xl shadow-black/5 ring-1 ring-base-content/5 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:ring-primary/20 hover:-translate-y-0.5">
@@ -46,14 +75,18 @@ const UserCard = ({
             <button
               type="button"
               className="btn btn-outline btn-error btn-sm flex-1 rounded-xl font-medium"
+              onClick={() => handleSendRequest(id, "ignored")}
+              disabled={loading}
             >
-              Ignore
+              {loading ? "Loading..." : "Ignore"}
             </button>
             <button
               type="button"
               className="btn btn-primary btn-sm flex-1 rounded-xl font-medium shadow-lg shadow-primary/25"
+              onClick={() => handleSendRequest(id, "interested")}
+              disabled={loading}
             >
-              Send Request
+              {loading ? "Loading..." : "Interested"}
             </button>
           </div>
         )}

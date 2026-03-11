@@ -37,7 +37,7 @@ const Connections = () => {
         <div className="flex flex-wrap justify-center my-10 gap-10">
           {connections?.map((connection) => (
             <div
-              key={connection?.id}
+              key={connection?._id}
               className="card bg-base-300 w-96 shadow-sm p-4"
             >
               <div className="flex items-center gap-2 mb-2">

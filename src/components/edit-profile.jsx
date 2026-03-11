@@ -50,7 +50,7 @@ const EditProfile = ({ user }) => {
     } catch (err) {
       if (err.response?.status === 401) {
         navigate("/login");
-      } 
+      }
       const message =
         err.response?.data?.message ||
         err.response?.data ||
@@ -144,6 +144,7 @@ const EditProfile = ({ user }) => {
       </div>
 
       <UserCard
+        id={user?._id}
         firstName={firstName}
         lastName={lastName}
         age={age}
